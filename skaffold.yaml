@@ -1,0 +1,17 @@
+apiVersion: skaffold/v4beta3
+kind: Config
+manifests:
+  rawYaml:
+    - ./infra/k8s/*
+build:
+  local: # whenever we build a image, dont push to dhub
+    push: false
+  artifacts:
+    - image: kiran/auth # image produced by the project (auth)
+      context: auth # folder where the code for this image contains
+      docker:
+        dockerfile: Dockerfile
+      sync: # how to handle file changes
+        manual:
+          - src: src/**/*.ts  # set of files skaffold need to watch
+            dest: .  # where to sink the files in the container
