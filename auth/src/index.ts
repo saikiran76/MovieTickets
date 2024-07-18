@@ -3,7 +3,8 @@ import { json } from "body-parser";
 
 import { signinRouter } from "./routes/sign-in";
 import { signoutRouter } from "./routes/sing-out";
-import { signupRouter } from "./routes/sign-up";
+import { signupRouter } from "./routes/signup";
+import { errorHandler } from "./middleware/error-handler";
 
 const app = express()
 const port = 4000;
@@ -12,6 +13,7 @@ app.use(json())
 app.use(signinRouter)
 app.use(signoutRouter)
 app.use(signupRouter)
+app.use(errorHandler)
 
 app.get("/", (req, res)=>{
     res.send("zak zak zak")
