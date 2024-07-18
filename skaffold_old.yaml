@@ -1,0 +1,19 @@
+apiVersion: skaffold/v4beta3
+kind: Config
+manifests:
+  rawYaml:
+    - ./infra/k8s/*
+    tagPolicy:
+      sha256: ae28723bef394c9bf32bb264681071b85d2a9c6e57b1bc874d37bc092afbc144
+build:
+  local: # whenever we build a image, dont push to dhub
+    push: false
+  artifacts:
+    - image: kiran76105/auth # image produced by the project (auth)
+      context: auth # folder where the code for this image contains
+      docker:
+        dockerfile: Dockerfile
+      sync: # how to handle file changes
+        manual:
+          - src: src/**/*.ts  # set of files skaffold need to watch
+            dest: .  # where to sink the files in the container
