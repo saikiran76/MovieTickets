@@ -15,8 +15,6 @@ spec:
       containers:
         - name: auth
           image: kiran76105/auth
-          ports:
-            - containerPort: 4000
           env:
             - name: JWT_KEY
               valueFrom:

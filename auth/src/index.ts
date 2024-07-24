@@ -4,14 +4,14 @@ import mongoose from "mongoose"
 import cookieSession from "cookie-session";
 
 import { signinRouter } from "./routes/sign-in";
-import { signoutRouter } from "./routes/sing-out";
+import { signoutRouter } from "./routes/sign-out";
 import { signupRouter } from "./routes/signup";
 import { errorHandler } from "./middleware/error-handler";
 import { NotFoundError } from "./errors/not-found";
+import { currentUserRouter } from "./routes/current-user";
 
 const app = express()
 app.set('trust proxy', true) // since nginix is proxying the traffic, and we should trust that traffic
-const port = 4000;
 app.use(json())
 app.use(
     cookieSession({
@@ -19,30 +19,25 @@ app.use(
         secure: true // use cookie only when user on https: small security addon
     })
 )
+const port = 4000;
 
+app.use(currentUserRouter)
 app.use(signinRouter)
 app.use(signoutRouter)
 app.use(signupRouter)
-app.use(errorHandler)
 
 app.all('*', (req, res)=>{
     throw new NotFoundError();
 
 })
 
-app.get("/", (req, res)=>{
-    res.send("zak zak zak")
-})
-
-app.get('/api/users/currentuser', (req, res)=>{
-    res.send('Hi there')
-})
+app.use(errorHandler)
 
 const start = async () =>{
+    if (!process.env.JWT_KEY) {
+        throw new Error('JWT_KEY must be defined');
+    }
     try{
-        if(!process.env.JWT_SECRET){
-
-        }
         await mongoose.connect('mongodb://auth-mongo-srv:27017/auth')
     }
 

@@ -19,18 +19,17 @@ router.post('/api/users/signup', [
     ],
     validateRequest,
     async (req: Request, res: Response)=>{
-        const errors = validationResult(req)
+        // const errors = validationResult(req)
 
-        if(!errors.isEmpty()){
-            // handling the validation error
-            throw new RequestValidationError(errors.array())
+        // if(!errors.isEmpty()){
+        //     // handling the validation error
+        //     throw new RequestValidationError(errors.array())
 
-        }
-
+        // }
         const { email, password } = req.body
 
-        console.log("Creating a user...")
-        // throw new DatabaseConnectionError();
+        // console.log("Creating a user...")
+        // // throw new DatabaseConnectionError();
 
         const existingUser = await User.findOne({ email });
 
@@ -45,7 +44,7 @@ router.post('/api/users/signup', [
         const userJwt = jwt.sign({
             id: user.id,   
             email: user.email
-        }, process.env.JWT_SECRET!)
+        }, process.env.JWT_KEY! )
 
         // Store it on session object
         req.session = {

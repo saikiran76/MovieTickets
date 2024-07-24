@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: client-depl
+spec: # how deployment should behave
+  replicas: 1
+  selector: 
+    matchLabels:
+      app: client-next
+  template: # How every pod created and managed by the deployment should behave
+    metadata: # how deployments shall find the pods to manage
+      labels: 
+        app: client-next
+    spec:
+      containers:
+        - name: client-next
+          image: kiran76105/client-next
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: client-srv
+spec:
+  selector:
+    app: client-next
+  ports:
+    - name: client-next
+      protocol: TCP
+      port: 3000
+      targetPort: 3000
+
+      
+
+  
